@@ -3,6 +3,11 @@
 
 <?php
 
+require_once __DIR__ . '/../funciones/visitas.php';
+
+$archivo = __DIR__ . '/../datos/visitas.csv';
+
+[$filas_ok, $filas_ko, $visitas] = cargarVisitasJPB($archivo);
 ?>
 
 <head>
@@ -20,8 +25,8 @@
     <a href="../index.php">Ir a la página principal</a>
 
     <p>
-        Se han cargado <span id="filas_correctas"></span> visitas del archivo
-        y se han descartado <span id="filas_incorrectas"></span> filas
+        Se han cargado <span id="filas_correctas"><?= $filas_ok ?></span> visitas del archivo
+        y se han descartado <span id="filas_incorrectas"><?= $filas_ko ?></span> filas
         porque no cumplen el formato.
     </p>
 
@@ -47,7 +52,7 @@
 
     </form>
 
-    <H3> Se han filtrado los datos por los residentes seleccionados. Se dejan de mostrar <span id="recuentoEliminadas"></span> visitas.</H3>
+    <H3> Se han filtrado los datos por los residentes seleccionados. Se dejan de mostrar <span id="recuentoEliminadas"><?= $filas_ko ?></span> visitas.</H3>
 
     <table id="tabla_visitas" border="1">
         <thead>
@@ -75,7 +80,7 @@
     </table>
 
     <hr>
-    <footer id="autor"></footer>
+    <footer id="autor">Desarrollo Web en Entorno Servidor - Ejercicio 2 - Tarea 1 - Alumno <b>Juan Pedro Buger ®</b></footer>
 </body>
 
 </html>

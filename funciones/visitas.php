@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . '/_cargadatos.php';
 require_once __DIR__ . '/validaciones.php';
 
 function cargarVisitasJPB(string $archivo): array
@@ -13,14 +14,16 @@ $filas = cargarCSV($archivo);
 
 foreach ($filas as $fila) { // Recorre el CSV
      if (
-        count($fila) == 8 &&  // Verifica 8 columnas
+        count($fila) == count(CABECERAS) &&  // Verifica 8 columnas
+        in_array($fila[2], VINCULOS, true) && // Verificacion de los vinculos
         esFechaValidaJPB($fila[3]) && 
         esHoraValidaJPB($fila[4]) &&  //
         esHoraValidaJPB($fila[5]) &&
         $fila[5] > $fila[4]  // Verificacion de que la hora de salida es superior a la de llegada
         ) {
             $filas_ok++;
-            $visitas[] = $fila;
+            $visita = array_combine(CABECERAS, $fila);
+            $visitas[] = $visita;
     } 
     
     else {

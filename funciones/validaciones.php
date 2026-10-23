@@ -1,5 +1,3 @@
-// Funciones de validacion
-
 <?php
 
 
@@ -13,6 +11,9 @@ function esHoraValidaJPB(string $hora): bool
 
     return (int)$h <= 23 && (int)$m <= 59;
 }
+
+
+
 
 
 
