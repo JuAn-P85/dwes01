@@ -63,7 +63,7 @@
     </form>
 
     <hr>
-    <footer id="autor"></footer>
+    <footer id="autor">Desarrollo Web en Entorno Servidor - Ejercicio 2 - Tarea 1 - Alumno <b>Juan Pedro Buger ®</b></footer>
 </body>
 
 </html>

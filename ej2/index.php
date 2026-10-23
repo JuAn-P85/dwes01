@@ -4,9 +4,7 @@
 <?php
 
 require_once __DIR__ . '/../funciones/visitas.php';
-
 $archivo = __DIR__ . '/../datos/visitas.csv';
-
 [$filas_ok, $filas_ko, $visitas] = cargarVisitasJPB($archivo);
 
 ?>
@@ -68,17 +66,13 @@ $archivo = __DIR__ . '/../datos/visitas.csv';
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($visitas as $visita) { ?>
-            <tr>
-                <td><?= ($visita['residente']) ?></td>
-                <td><?= ($visita['solicitante']) ?></td>
-                <td><?= ($visita['vinculo']) ?></td>
-                <td><?= ($visita['fecha']) ?></td>
-                <td><?= ($visita['inicio']) ?></td>
-                <td><?= ($visita['fin']) ?></td>
-                <td><?= ($visita['observaciones']) ?></td>
-            </tr>
-        <?php } ?>
+    <?php foreach ($visitas as $visita) { ?>
+        <tr>
+            <?php foreach ($visita as $fila) { ?>
+                <td><?= htmlspecialchars($fila) ?></td>
+            <?php } ?>
+        </tr>
+    <?php } ?>
         </tbody>
     </table>
 
