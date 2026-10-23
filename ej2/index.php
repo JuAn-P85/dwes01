@@ -8,6 +8,7 @@ require_once __DIR__ . '/../funciones/visitas.php';
 $archivo = __DIR__ . '/../datos/visitas.csv';
 
 [$filas_ok, $filas_ko, $visitas] = cargarVisitasJPB($archivo);
+
 ?>
 
 <head>
@@ -32,7 +33,7 @@ $archivo = __DIR__ . '/../datos/visitas.csv';
 
     <div id="aviso">
         <h3 style="color:red">¡Atención!</h3>
-        <p><strong style="color:red"></strong></p>
+        <p><strong style="color:red">Las visitas descartadas no se tienen en cuenta para la planificacion</strong></p>
     </div>
 
     <h2>Filtrar por residentes</h2>
@@ -67,15 +68,17 @@ $archivo = __DIR__ . '/../datos/visitas.csv';
             </tr>
         </thead>
         <tbody>
+        <?php foreach ($visitas as $visita) { ?>
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td><?= ($visita['residente']) ?></td>
+                <td><?= ($visita['solicitante']) ?></td>
+                <td><?= ($visita['vinculo']) ?></td>
+                <td><?= ($visita['fecha']) ?></td>
+                <td><?= ($visita['inicio']) ?></td>
+                <td><?= ($visita['fin']) ?></td>
+                <td><?= ($visita['observaciones']) ?></td>
             </tr>
+        <?php } ?>
         </tbody>
     </table>
 
