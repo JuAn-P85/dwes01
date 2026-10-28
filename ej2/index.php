@@ -4,6 +4,7 @@
 <?php
 
 require_once __DIR__ . '/../funciones/visitas.php';
+
 $archivo = __DIR__ . '/../datos/visitas.csv';
 [$filas_ok, $filas_ko, $visitas] = cargarVisitasJPB($archivo);
 
@@ -24,7 +25,7 @@ $archivo = __DIR__ . '/../datos/visitas.csv';
     <a href="../index.php">Ir a la página principal</a>
 
     <p>
-        Se han cargado <span id="filas_correctas"><?= $filas_ok ?></span> visitas del archivo
+        Se han cargado <span id="filas_correctas"><?= $filas_ok ?></span> visitas del archivo  <!-- Paso 3 -->
         y se han descartado <span id="filas_incorrectas"><?= $filas_ko ?></span> filas
         porque no cumplen el formato.
     </p>
@@ -37,6 +38,21 @@ $archivo = __DIR__ . '/../datos/visitas.csv';
     <h2>Filtrar por residentes</h2>
     <h3>Selecciona los residentes por los que desees filtrar</h3>
     <form id="form_filtro_residentes" action="index.php" method="POST">
+
+
+<?php
+$residentes = [];
+
+foreach ($visitas as $visita) {
+    $residentes[] = $visita['residente'];
+}
+
+$residentes = array_unique($residentes);
+?>
+
+
+
+   
 
         <label style="display:inline-block;width:300px;">
             <input type="checkbox" name="residentes[]" value="">
@@ -69,7 +85,7 @@ $archivo = __DIR__ . '/../datos/visitas.csv';
     <?php foreach ($visitas as $visita) { ?>
         <tr>
             <?php foreach ($visita as $fila) { ?>
-                <td><?= htmlspecialchars($fila) ?></td>
+                <td><?= htmlspecialchars($fila) ?></td> <!-- Forecah anidado -->
             <?php } ?>
         </tr>
     <?php } ?>
