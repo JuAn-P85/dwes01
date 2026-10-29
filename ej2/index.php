@@ -4,9 +4,30 @@
 <?php
 
 require_once __DIR__ . '/../funciones/visitas.php';
+require_once __DIR__ . '/../funciones/otrasfunciones.php';
 
 $archivo = __DIR__ . '/../datos/visitas.csv';
 [$filas_ok, $filas_ko, $visitas] = cargarVisitasJPB($archivo);
+
+$residentes = obtencionResidentes($visitas); // variable que almacena el array de la funcion de otrasfunciones
+
+$residentes_marcados = $_POST['residentes'] ?? [];  // casillas marcadas
+
+$visitas_mostradas = $visitas;
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {  // Verifica si se ha enviado el form
+    $visitas_mostradas = array_filter(
+        $visitas,
+        function ($visita) use ($residentes_marcados) {
+            return in_array(
+                $visita['residente'],
+                $residentes_marcados,
+                true
+            );
+        }
+    );
+}
 
 ?>
 
@@ -50,22 +71,24 @@ $archivo = __DIR__ . '/../datos/visitas.csv';
         $residentes = array_unique($residentes);
         ?>
 
-        <?php foreach ($residentes as $residente) { ?>  <!-- Paso 4 ,recorre los residentes u el imput muestra los nombres--> 
+        <?php foreach ($residentes as $residente) { ?> <!-- Paso 4 ,recorre los residentes u el imput muestra los nombres-->
             <label style="display:inline-block;width:300px;">
-                <input type="checkbox" name="residentes[]" value="<?= htmlspecialchars($residente) ?>">
+                <input  // Modifico el codigo original para mantener las casillas marcadas
+                    type="checkbox"name="residentes[]" value="<?= htmlspecialchars($residente) ?>" 
+                    <?= in_array($residente, $residentes_marcados, true) ? 'checked' : '' ?>>
                 <?= htmlspecialchars($residente) ?>
 
             </label>
         <?php } ?>
 
-            <label style="display:inline-block;width:300px;">
-                <input id="residente_no_valido" type="checkbox" name="residentes[]" value="Residente no válido">
-                Residente no válido
-            </label>
+        <label style="display:inline-block;width:300px;">
+            <input id="residente_no_valido" type="checkbox" name="residentes[]" value="Residente no válido">
+            Residente no válido
+        </label>
 
 
-            <br>
-            <button type="submit" id="boton_filtrar">Filtrar</button>
+        <br>
+        <button type="submit" id="boton_filtrar">Filtrar</button>
 
 
     </form>

@@ -3,7 +3,7 @@
 function obtencionResidentes(array $visitas): array
 {
     $residentes = array_column($visitas, 'residente');
-    $residentes = array_unique($residentes);
+    $residentes = array_unique($residentes); // hace que no se repitan
     sort($residentes);
 
     return $residentes;
