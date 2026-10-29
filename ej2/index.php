@@ -40,8 +40,8 @@ $archivo = __DIR__ . '/../datos/visitas.csv';
     <form id="form_filtro_residentes" action="index.php" method="POST">
 
 
-<?php
-$residentes = [];
+<?php // Paso 4 , posterior al codigo del 3 mas abajo
+$residentes = [];  // array para recorrer los residentes
 
 foreach ($visitas as $visita) {
     $residentes[] = $visita['residente'];
@@ -52,7 +52,7 @@ $residentes = array_unique($residentes);
 
 
 
-   
+
 
         <label style="display:inline-block;width:300px;">
             <input type="checkbox" name="residentes[]" value="">
@@ -81,15 +81,19 @@ $residentes = array_unique($residentes);
                 <th id="th_observaciones">Observaciones</th>
             </tr>
         </thead>
-        <tbody>
+<tbody>
     <?php foreach ($visitas as $visita) { ?>
         <tr>
-            <?php foreach ($visita as $fila) { ?>
-                <td><?= htmlspecialchars($fila) ?></td> <!-- Forecah anidado -->
-            <?php } ?>
+            <td><?= htmlspecialchars($visita['residente']) ?></td>
+            <td><?= htmlspecialchars($visita['solicitante']) ?></td>
+            <td><?= htmlspecialchars($visita['vinculo']) ?></td>
+            <td><?= htmlspecialchars($visita['fecha']) ?></td>
+            <td><?= htmlspecialchars($visita['inicio']) ?></td>
+            <td><?= htmlspecialchars($visita['fin']) ?></td>
+            <td><?= htmlspecialchars($visita['observaciones']) ?></td>
         </tr>
     <?php } ?>
-        </tbody>
+</tbody>
     </table>
 
     <hr>
