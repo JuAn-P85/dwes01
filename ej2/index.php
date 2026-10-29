@@ -25,7 +25,7 @@ $archivo = __DIR__ . '/../datos/visitas.csv';
     <a href="../index.php">Ir a la página principal</a>
 
     <p>
-        Se han cargado <span id="filas_correctas"><?= $filas_ok ?></span> visitas del archivo  <!-- Paso 3 -->
+        Se han cargado <span id="filas_correctas"><?= $filas_ok ?></span> visitas del archivo <!-- Paso 3 -->
         y se han descartado <span id="filas_incorrectas"><?= $filas_ko ?></span> filas
         porque no cumplen el formato.
     </p>
@@ -40,30 +40,33 @@ $archivo = __DIR__ . '/../datos/visitas.csv';
     <form id="form_filtro_residentes" action="index.php" method="POST">
 
 
-<?php // Paso 4 , posterior al codigo del 3 mas abajo
-$residentes = [];  // array para recorrer los residentes
+        <?php // Paso 4 , posterior al codigo del 3 mas abajo
+        $residentes = [];  // array para recorrer los residentes
 
-foreach ($visitas as $visita) {
-    $residentes[] = $visita['residente'];
-}
+        foreach ($visitas as $visita) {
+            $residentes[] = $visita['residente'];
+        }
 
-$residentes = array_unique($residentes);
-?>
+        $residentes = array_unique($residentes);
+        ?>
+
+        <?php foreach ($residentes as $residente) { ?>  <!-- Paso 4 ,recorre los residentes u el imput muestra los nombres--> 
+            <label style="display:inline-block;width:300px;">
+                <input type="checkbox" name="residentes[]" value="<?= htmlspecialchars($residente) ?>">
+                <?= htmlspecialchars($residente) ?>
+
+            </label>
+        <?php } ?>
+
+            <label style="display:inline-block;width:300px;">
+                <input id="residente_no_valido" type="checkbox" name="residentes[]" value="Residente no válido">
+                Residente no válido
+            </label>
 
 
+            <br>
+            <button type="submit" id="boton_filtrar">Filtrar</button>
 
-
-
-        <label style="display:inline-block;width:300px;">
-            <input type="checkbox" name="residentes[]" value="">
-
-        </label>
-        <label style="display:inline-block;width:300px;">
-            <input id="residente_no_valido" type="checkbox" name="residentes[]" value="Residente no válido">
-            Residente no válido
-        </label>
-        <br>
-        <button type="submit" id="boton_filtrar">Filtrar</button>
 
     </form>
 
@@ -81,19 +84,19 @@ $residentes = array_unique($residentes);
                 <th id="th_observaciones">Observaciones</th>
             </tr>
         </thead>
-<tbody>
-    <?php foreach ($visitas as $visita) { ?>
-        <tr>
-            <td><?= htmlspecialchars($visita['residente']) ?></td>
-            <td><?= htmlspecialchars($visita['solicitante']) ?></td>
-            <td><?= htmlspecialchars($visita['vinculo']) ?></td>
-            <td><?= htmlspecialchars($visita['fecha']) ?></td>
-            <td><?= htmlspecialchars($visita['inicio']) ?></td>
-            <td><?= htmlspecialchars($visita['fin']) ?></td>
-            <td><?= htmlspecialchars($visita['observaciones']) ?></td>
-        </tr>
-    <?php } ?>
-</tbody>
+        <tbody>
+            <?php foreach ($visitas as $visita) { ?> <!-- Paso 2 ,surpimo foreach anidado -->
+                <tr>
+                    <td><?= htmlspecialchars($visita['residente']) ?></td>
+                    <td><?= htmlspecialchars($visita['solicitante']) ?></td>
+                    <td><?= htmlspecialchars($visita['vinculo']) ?></td>
+                    <td><?= htmlspecialchars($visita['fecha']) ?></td>
+                    <td><?= htmlspecialchars($visita['inicio']) ?></td>
+                    <td><?= htmlspecialchars($visita['fin']) ?></td>
+                    <td><?= htmlspecialchars($visita['observaciones']) ?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
     </table>
 
     <hr>
