@@ -1,0 +1,1 @@
+function filtrarVisitasJPB(array $residentes, array &$visitas): int

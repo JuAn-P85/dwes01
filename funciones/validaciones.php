@@ -21,10 +21,22 @@ function esHoraValidaJPB(string $hora): bool
 function esFechaValidaJPB(string $fecha): bool
 {
     if (!preg_match('~^\d{2}/\d{2}/\d{4}$~', $fecha)) {
-        return false;  
+        return false;
     }
 
     [$dia, $mes, $year] = explode('/', $fecha);
 
     return checkdate((int)$mes, (int)$dia, (int)$year);
+}
+
+
+function sonResidentesCorrectosJPB(array $residentesBuenos, array $residentesRecibidos): bool
+{
+    foreach ($residentesRecibidos as $residente) {
+        if (!in_array($residente, $residentesBuenos)) {
+            return false;
+        }
+    }
+
+    return true;
 }
