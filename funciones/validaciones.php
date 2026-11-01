@@ -30,7 +30,7 @@ function esFechaValidaJPB(string $fecha): bool
 }
 
 
-function sonResidentesCorrectosJPB(array $residentesBuenos, array $residentesRecibidos): bool
+function sonResidentesCorrectosJPB(array $residentesBuenos, array $residentesRecibidos): bool  // Paso 5  funcion 1
 {
     foreach ($residentesRecibidos as $residente) {
         if (!in_array($residente, $residentesBuenos)) {
