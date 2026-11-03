@@ -1,3 +1,13 @@
+<?php
+// archivos necesarios para las funciones
+require_once __DIR__ . '/../funciones/visitas.php';
+require_once __DIR__ . '/../funciones/otrasfunciones.php';
+$archivo = __DIR__ . '/../datos/visitas.csv';
+[, , $visitas] = cargarVisitasJPB($archivo);
+$residentes = obtencionResidentes($visitas);
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -63,7 +73,7 @@
     </form>
 
     <hr>
-    <footer id="autor">Desarrollo Web en Entorno Servidor - Ejercicio 2 - Tarea 1 - Alumno <b>Juan Pedro Buger ®</b></footer>
+    <footer id="autor">Desarrollo Web en Entorno Servidor - Ejercicio 3 - Tarea 1 - Alumno <b>Juan Pedro Buger ®</b></footer>
 </body>
 
 </html>

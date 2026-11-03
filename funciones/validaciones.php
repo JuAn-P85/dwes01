@@ -40,3 +40,5 @@ function sonResidentesCorrectosJPB(array $residentesBuenos, array $residentesRec
 
     return true;
 }
+
+

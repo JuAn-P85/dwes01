@@ -17,7 +17,7 @@
     <a href="../index.php">Ir a la página principal</a>
 
     <hr>
-    <footer id="autor"></footer>
+    <footer id="autor">Desarrollo Web en Entorno Servidor - Ejercicio 3 - Tarea 1 - Alumno <b>Juan Pedro Buger ®</footer>
 </body>
 
 </html>
