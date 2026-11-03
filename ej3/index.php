@@ -31,10 +31,13 @@ $residentes = obtencionResidentes($visitas);
     <form action="guardar.php" method="post">
         <p>
             <label for="residente">Residente al que se visita:</label><br>
-            <select id="residente" name="residente">
-                <option value="">-- Selecciona un residente --</option>
-                <option value="residente-de-pruebas-no-existente">Residente de pruebas (no existente)</option>
-            </select>
+                <select id="residente" name="residente">
+                    <option value="">-- Selecciona un residente --</option>
+                    <?php foreach ($residentes as $usuario) {?>   <!-- para mostrar los usuarios en el desplegable -->
+                        <option value="<?php echo htmlspecialchars($usuario) ?>"><?php echo htmlspecialchars($usuario) ?></option> <!-- la primera manda el valor y la segunda muestra el texto desntro del option-->
+                    <?php } ?>
+                    <option value="residente-de-pruebas-no-existente">Residente de pruebas (no existente)</option>
+                </select>
         </p>
 
         <p>
