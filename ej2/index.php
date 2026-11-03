@@ -6,6 +6,9 @@
 require_once __DIR__ . '/../funciones/visitas.php';
 require_once __DIR__ . '/../funciones/otrasfunciones.php';
 
+require_once __DIR__ . '/../funciones/validaciones.php';  // archivos del paso 5
+require_once __DIR__ . '/../funciones/filtradatos.php';
+
 $archivo = __DIR__ . '/../datos/visitas.csv';
 [$filas_ok, $filas_ko, $visitas] = cargarVisitasJPB($archivo);
 
@@ -13,20 +16,20 @@ $residentes = obtencionResidentes($visitas); // variable que almacena el array d
 
 $residentes_marcados = $_POST['residentes'] ?? [];  // casillas marcadas
 
-$visitas_mostradas = $visitas;
-
+$aviso = false;
+$recuentoEliminadas = 0;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {  // Verifica si se ha enviado el form
-    $visitas_mostradas = array_filter(
-        $visitas,
-        function ($visita) use ($residentes_marcados) {
-            return in_array(
-                $visita['residente'],
-                $residentes_marcados,
-                true
-            );
-        }
-    );
+
+    if (sonResidentesCorrectosJPB($residentes, $residentes_marcados)) {
+
+        $recuentoEliminadas = filtrarVisitasJPB($residentes_marcados, $visitas);
+    } else {
+
+        $aviso = true;
+
+        $residentes_marcados = array_intersect($residentes_marcados, $residentes);
+    }
 }
 
 ?>
@@ -51,34 +54,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {  // Verifica si se ha enviado el fo
         porque no cumplen el formato.
     </p>
 
-    <div id="aviso">
-        <h3 style="color:red">¡Atención!</h3>
-        <p><strong style="color:red">Las visitas descartadas no se tienen en cuenta para la planificacion</strong></p>
-    </div>
+    <?php if ($aviso) { ?>
+        <div id="aviso">
+            <h3 style="color:red">¡Atención!</h3>
+            <p>
+                <strong style="color:red">
+                    Se han seleccionado residentes que no aparecen en el archivo.
+                </strong>
+            </p>
+        </div>
+    <?php } ?>
 
     <h2>Filtrar por residentes</h2>
     <h3>Selecciona los residentes por los que desees filtrar</h3>
+
     <form id="form_filtro_residentes" action="index.php" method="POST">
 
-
-        <?php // Paso 4 , posterior al codigo del 3 mas abajo
-        $residentes = [];  // array para recorrer los residentes
-
-        foreach ($visitas as $visita) {
-            $residentes[] = $visita['residente'];
-        }
-
-        $residentes = array_unique($residentes);
+        <?php // Paso 4 , posterior al codigo del 3 mas abajo 
         ?>
 
-        <?php foreach ($residentes as $residente) { ?> <!-- Paso 4 ,recorre los residentes u el imput muestra los nombres-->
+        <?php foreach ($residentes as $residente) { ?> <!-- Paso 4 ,recorre los residentes y el input muestra los nombres-->
+
             <label style="display:inline-block;width:300px;">
-                <input  // Modifico el codigo original para mantener las casillas marcadas
-                    type="checkbox"name="residentes[]" value="<?= htmlspecialchars($residente) ?>" 
+
+                <input
+                    type="checkbox"
+                    name="residentes[]"
+                    value="<?= htmlspecialchars($residente) ?>"
                     <?= in_array($residente, $residentes_marcados, true) ? 'checked' : '' ?>>
+
                 <?= htmlspecialchars($residente) ?>
 
             </label>
+
         <?php } ?>
 
         <label style="display:inline-block;width:300px;">
@@ -86,14 +94,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {  // Verifica si se ha enviado el fo
             Residente no válido
         </label>
 
-
         <br>
         <button type="submit" id="boton_filtrar">Filtrar</button>
 
-
     </form>
 
-    <H3> Se han filtrado los datos por los residentes seleccionados. Se dejan de mostrar <span id="recuentoEliminadas"><?= $filas_ko ?></span> visitas.</H3>
+    <?php if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$aviso && !empty($residentes_marcados)) { ?>
+
+        <h3>
+            Se han filtrado los datos por los residentes seleccionados.
+            Se dejan de mostrar
+            <span id="recuentoEliminadas"><?= $recuentoEliminadas ?></span>
+            visitas.
+        </h3>
+
+    <?php } ?>
 
     <table id="tabla_visitas" border="1">
         <thead>
@@ -107,8 +122,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {  // Verifica si se ha enviado el fo
                 <th id="th_observaciones">Observaciones</th>
             </tr>
         </thead>
+
         <tbody>
-            <?php foreach ($visitas as $visita) { ?> <!-- Paso 2 ,surpimo foreach anidado -->
+
+            <?php foreach ($visitas as $visita) { ?> <!-- Paso 2 , suprimimos foreach anidado -->
+
                 <tr>
                     <td><?= htmlspecialchars($visita['residente']) ?></td>
                     <td><?= htmlspecialchars($visita['solicitante']) ?></td>
@@ -118,12 +136,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {  // Verifica si se ha enviado el fo
                     <td><?= htmlspecialchars($visita['fin']) ?></td>
                     <td><?= htmlspecialchars($visita['observaciones']) ?></td>
                 </tr>
+
             <?php } ?>
+
         </tbody>
     </table>
 
     <hr>
-    <footer id="autor">Desarrollo Web en Entorno Servidor - Ejercicio 2 - Tarea 1 - Alumno <b>Juan Pedro Buger ®</b></footer>
+
+    <footer id="autor">
+        Desarrollo Web en Entorno Servidor - Ejercicio 2 - Tarea 1 - Alumno
+        <b>Juan Pedro Buger ®</b>
+    </footer>
+
 </body>
 
 </html>
