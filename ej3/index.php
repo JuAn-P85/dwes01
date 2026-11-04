@@ -6,7 +6,7 @@ $archivo = __DIR__ . '/../datos/visitas.csv';
 [,, $visitas] = cargarVisitasJPB($archivo);
 
 $residentes = obtencionResidentes($visitas); //otras funciones
-$vinculos   = obtencionVinculos($visitas); //otras funciones
+
 ?>
 
 <!DOCTYPE html>
@@ -45,7 +45,7 @@ $vinculos   = obtencionVinculos($visitas); //otras funciones
             <label for="vinculo">Vínculo con el residente:</label><br>
             <select id="vinculo" name="vinculo">
                 <option value="">-- Selecciona el vínculo --</option>
-                <?php foreach ($vinculos as $vinculo) { ?>
+                <?php foreach (VINCULOS as $vinculo) { ?>
                     <option value="<?php echo htmlspecialchars($vinculo) ?>"><?php echo htmlspecialchars($vinculo) ?></option>
                 <?php } ?>
                 <option value="vinculo-erroneo-de-pruebas">Valor erróneo de vínculo (para pruebas) </option>
