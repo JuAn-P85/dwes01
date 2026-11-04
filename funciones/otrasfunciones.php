@@ -8,3 +8,10 @@ function obtencionResidentes(array $visitas): array
 
     return $residentes;
 }
+
+
+function obtencionVinculos(array $visitas): array {   // funcion creada para el selector de vinculos del ejercicio 3
+    $vinculos = array_unique(array_column($visitas, 'vinculo'));
+    sort($vinculos);
+    return $vinculos;
+}

@@ -1,11 +1,12 @@
 <?php
-// archivos necesarios para las funciones
 require_once __DIR__ . '/../funciones/visitas.php';
 require_once __DIR__ . '/../funciones/otrasfunciones.php';
-$archivo = __DIR__ . '/../datos/visitas.csv';
-[, , $visitas] = cargarVisitasJPB($archivo);
-$residentes = obtencionResidentes($visitas);
 
+$archivo = __DIR__ . '/../datos/visitas.csv';
+[,, $visitas] = cargarVisitasJPB($archivo);
+
+$residentes = obtencionResidentes($visitas); //otras funciones
+$vinculos   = obtencionVinculos($visitas); //otras funciones
 ?>
 
 <!DOCTYPE html>
@@ -31,19 +32,22 @@ $residentes = obtencionResidentes($visitas);
     <form action="guardar.php" method="post">
         <p>
             <label for="residente">Residente al que se visita:</label><br>
-                <select id="residente" name="residente">
-                    <option value="">-- Selecciona un residente --</option>
-                    <?php foreach ($residentes as $usuario) {?>   <!-- para mostrar los usuarios en el desplegable -->
-                        <option value="<?php echo htmlspecialchars($usuario) ?>"><?php echo htmlspecialchars($usuario) ?></option> <!-- la primera manda el valor y la segunda muestra el texto desntro del option-->
-                    <?php } ?>
-                    <option value="residente-de-pruebas-no-existente">Residente de pruebas (no existente)</option>
-                </select>
+            <select id="residente" name="residente">
+                <option value="">-- Selecciona un residente --</option>
+                <?php foreach ($residentes as $usuario) { ?> <!-- para mostrar los usuarios en el desplegable -->
+                    <option value="<?php echo htmlspecialchars($usuario) ?>"><?php echo htmlspecialchars($usuario) ?></option> <!-- la primera manda el valor y la segunda muestra el texto desntro del option-->
+                <?php } ?>
+                <option value="residente-de-pruebas-no-existente">Residente de pruebas (no existente)</option>
+            </select>
         </p>
 
         <p>
             <label for="vinculo">Vínculo con el residente:</label><br>
             <select id="vinculo" name="vinculo">
                 <option value="">-- Selecciona el vínculo --</option>
+                <?php foreach ($vinculos as $vinculo) { ?>
+                    <option value="<?php echo htmlspecialchars($vinculo) ?>"><?php echo htmlspecialchars($vinculo) ?></option>
+                <?php } ?>
                 <option value="vinculo-erroneo-de-pruebas">Valor erróneo de vínculo (para pruebas) </option>
             </select>
         </p>
