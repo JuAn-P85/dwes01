@@ -42,7 +42,7 @@ function sonResidentesCorrectosJPB(array $residentesBuenos, array $residentesRec
 
 // Funciones del ejercicio 3 paso 2
 
-function esDuracionValidaXYZ(array $conf, string $hora_inicio, string $hora_fin): bool
+function esDuracionValidaJPB(array $conf, string $hora_inicio, string $hora_fin): bool
 {
     $inicio = strtotime($hora_inicio);
     $fin = strtotime($hora_fin);
@@ -53,10 +53,10 @@ function esDuracionValidaXYZ(array $conf, string $hora_inicio, string $hora_fin)
 
 function estaEnUnaFranjaJPB(array $conf, string $hora_inicio, string $hora_fin): bool
 {
-    foreach ($conf['horario'] as $tramo) {
+    foreach ($conf['horario'] as $franja) {
 
         if (
-            $hora_inicio >= $tramo[0] && $hora_fin <= $tramo[1]
+            $hora_inicio >= $franja[0] && $hora_fin <= $franja[1]
         ) {
             return true;
         }
@@ -65,4 +65,22 @@ function estaEnUnaFranjaJPB(array $conf, string $hora_inicio, string $hora_fin):
     return false;
 }
 
-function solapaConVisitasXYZ(array $visitas, string $fecha, string $hora_inicio, string $hora_fin): bool {}
+function solapaConVisitasJPB(array $visitas, string $fecha, string $hora_inicio, string $hora_fin): bool 
+{
+    foreach ($visitas as $visita) {
+
+
+        if ($visita['fecha'] == $fecha) {
+
+            // Después comprobamos si los horarios se solapan.
+            if (
+                $hora_inicio < $visita['fin'] &&
+                $hora_fin > $visita['inicio']
+            ) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
