@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../funciones/visitas.php';
+
 
 function esHoraValidaJPB(string $hora): bool
 {
@@ -11,11 +13,6 @@ function esHoraValidaJPB(string $hora): bool
 
     return (int)$h <= 23 && (int)$m <= 59;
 }
-
-
-
-
-
 
 
 function esFechaValidaJPB(string $fecha): bool
@@ -42,3 +39,18 @@ function sonResidentesCorrectosJPB(array $residentesBuenos, array $residentesRec
 }
 
 
+
+// Funciones del ejercicio 3 paso 2
+
+function esDuracionValidaXYZ(array $conf, string $hora_inicio, string $hora_fin): bool
+{
+    $inicio = strtotime($hora_inicio);
+    $fin = strtotime($hora_fin);
+    $duracion = ($fin - $inicio) / 60;
+
+    return $duracion >= $conf['duracion_minima'];
+}
+
+function estaEnUnaFranjaXYZ(array $conf, string $hora_inicio, string $hora_fin): bool {}
+
+function solapaConVisitasXYZ(array $visitas, string $fecha, string $hora_inicio, string $hora_fin): bool {}
