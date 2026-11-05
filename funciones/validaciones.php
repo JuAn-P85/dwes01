@@ -51,6 +51,18 @@ function esDuracionValidaXYZ(array $conf, string $hora_inicio, string $hora_fin)
     return $duracion >= $conf['duracion_minima'];
 }
 
-function estaEnUnaFranjaXYZ(array $conf, string $hora_inicio, string $hora_fin): bool {}
+function estaEnUnaFranjaJPB(array $conf, string $hora_inicio, string $hora_fin): bool
+{
+    foreach ($conf['horario'] as $tramo) {
+
+        if (
+            $hora_inicio >= $tramo[0] && $hora_fin <= $tramo[1]
+        ) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 function solapaConVisitasXYZ(array $visitas, string $fecha, string $hora_inicio, string $hora_fin): bool {}
