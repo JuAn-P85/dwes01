@@ -72,7 +72,7 @@ function solapaConVisitasJPB(array $visitas, string $fecha, string $hora_inicio,
 
         if ($visita['fecha'] == $fecha) {
 
-            // Después comprobamos si los horarios se solapan.
+
             if (
                 $hora_inicio < $visita['fin'] &&
                 $hora_fin > $visita['inicio']
