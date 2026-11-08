@@ -7,8 +7,8 @@ $archivo = __DIR__ . '/../datos/visitas.csv';
 
 $residentes = obtencionResidentes($visitas); //otras funciones
 
-// cuando index.php lo incluye guardar.php, llegan con errores y valores;
-// cuando se accede directo, se inicializan vacíos
+// cuando index incluye guardar.php llegan con errores y valores
+// si accedemos directamente, se inicializan vacíos
 $errores = $errores ?? [];
 $valores = $valores ?? [];
 ?>

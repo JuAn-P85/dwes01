@@ -1,11 +1,7 @@
 <?php
-ini_set('display_errors', '1');
-error_reporting(E_ALL);
-?>
-
-<?php
 require_once __DIR__ . '/../funciones/visitas.php';
 require_once __DIR__ . '/../funciones/otrasfunciones.php';
+require_once __DIR__ . '/../funciones/_guardardatos.php';  // necesario para el elseif del formulario correcto
 
 $conf = require __DIR__ . '/../conf/horario.php';
 
@@ -13,7 +9,7 @@ $tramos          = $conf['horario'];
 $duracion_minima = $conf['duracion_minima'];
 
 $archivo = __DIR__ . '/../datos/visitas.csv';
-[, , $visitas] = cargarVisitasJPB($archivo);
+[,, $visitas] = cargarVisitasJPB($archivo);
 $residentes = obtencionResidentes($visitas);
 
 // variables para datos del formulario 
@@ -61,7 +57,7 @@ if (empty($fecha)) {
 } elseif (!esFechaValidaJPB($fecha)) {
     if (!preg_match('~^\d{2}/\d{2}/\d{4}$~', $fecha)) {
         $errores[] = "La fecha \"$fecha\" no tiene un formato válido. "
-            . 'Debe escribirse con el formato dd/mm/aaaa '. 'Por ejemplo: 06/11/2026.';
+            . 'Debe escribirse con el formato dd/mm/aaaa ' . 'Por ejemplo: 06/11/2026.';
     } else {
         [$d, $m, $a] = explode('/', $fecha);
         $errores[] = "La fecha \"$fecha\" no existe en el calendario. "
@@ -69,7 +65,7 @@ if (empty($fecha)) {
     }
 }
 
-// Horarios
+// horarios
 if (empty($inicio)) {
     $errores[] = 'No se ha indicado la hora de inicio de visita. '
         . 'Por fabor, escríbela con el formato hh:mm.';
@@ -93,7 +89,7 @@ if (esHoraValidaJPB($inicio) && esHoraValidaJPB($fin) && $fin <= $inicio) {
         . 'Por fabor ,indica una hora de salida por una posterior a ' . $inicio . '.';
 }
 
-// Duración mínima
+// Duración 
 if (esHoraValidaJPB($inicio) && esHoraValidaJPB($fin) && $fin > $inicio) {
     if (!esDuracionValidaJPB($conf, $inicio, $fin)) {
         [$hi, $mi] = explode(':', $inicio);
@@ -115,7 +111,7 @@ if (esHoraValidaJPB($inicio) && esHoraValidaJPB($fin) && $fin > $inicio) {
         );
 
         $errores[] = "La visita de $inicio a $fin no se encuentra dentro de una franja horaria. "
-            . 'Se puede visitar ' . implode(' y ', $textoTramos) . ', '            
+            . 'Se puede visitar ' . implode(' y ', $textoTramos) . ', '
             . 'Por fabor elige una hora de entrada y salida que estén dentro de una misma franja.';
     }
 }
