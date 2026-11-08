@@ -8,7 +8,8 @@ $tramos          = $conf['horario'];
 $duracion_minima = $conf['duracion_minima'];
 
 $archivo = __DIR__ . '/../datos/visitas.csv';
-[, $residentes, $visitas] = cargarVisitasJPB($archivo);
+[, , $visitas] = cargarVisitasJPB($archivo);
+$residentes = obtencionResidentes($visitas);
 
 // variables para datos del formulario 
 $residente     = trim($_POST['residente'] ?? '');
@@ -20,7 +21,7 @@ $fin           = trim($_POST['fin'] ?? '');
 $observaciones = trim($_POST['observaciones'] ?? '');
 
 $errores = [];
-$estado = 'errores'; // 'errores' | 'ok' | 'fallo'
+$estado = 'errores'; // 'errores' | 'ok' | 'ko'
 
 // referente a residentes
 if (empty($residente)) {
@@ -34,7 +35,7 @@ if (empty($residente)) {
 // vínculo
 if (empty($vinculo)) {
     $errores[] = 'No has seleccionado ningún vínculo. '
-        . 'Por fabor elige una opción del desplegable ('
+        . 'Por fabor, elige una opción del desplegable ('
         . implode(', ', VINCULOS) . ').';
 } elseif (!in_array($vinculo, VINCULOS)) {
     $errores[] = "El vínculo \"$vinculo\" no es válido. "
@@ -51,24 +52,22 @@ if (empty($solicitante)) {
 //Fecha
 if (empty($fecha)) {
     $errores[] = 'No has indicado ninguna fecha. '
-        . 'Por fabor escríbela con el formato dd/mm/aaaa (por ejemplo, 06/10/2026).';
+        . 'Por fabor ,escríbela con el formato dd/mm/aaaa.';
 } elseif (!esFechaValidaJPB($fecha)) {
     if (!preg_match('~^\d{2}/\d{2}/\d{4}$~', $fecha)) {
         $errores[] = "La fecha \"$fecha\" no tiene un formato válido. "
-            . 'Debe escribirse con el formato dd/mm/aaaa '
-            . 'Por ejemplo: 06/11/2026.';
+            . 'Debe escribirse con el formato dd/mm/aaaa '. 'Por ejemplo: 06/11/2026.';
     } else {
         [$d, $m, $a] = explode('/', $fecha);
         $errores[] = "La fecha \"$fecha\" no existe en el calendario. "
-            . "El mes $m no tiene día $d en el año $a. "
-            . 'Por fabor comprueba los datos intocucidos inténtalo de nuevo.';
+            . "El mes $m no tiene día $d en el año $a. " . 'Por fabor comprueba los datos intocucidos inténtalo de nuevo.';
     }
 }
 
 // Horarios
 if (empty($inicio)) {
     $errores[] = 'No se ha indicado la hora de inicio de visita. '
-        . 'Por fabor, escríbela con el formato hh:mm (por ejemplo, 11:30).';
+        . 'Por fabor, escríbela con el formato hh:mm.';
 } elseif (!esHoraValidaJPB($inicio)) {
     $errores[] = "La hora de entrada \"$inicio\" no tiene un formato válido. "
         . 'Debe escribirse con el formato hh:mm ' . 'Por ejemplo: 11:30.';
@@ -77,7 +76,7 @@ if (empty($inicio)) {
 
 if (empty($fin)) {
     $errores[] = 'No has indicado una hora de salida. '
-        . 'Por fabor, escríbela con el formato hh:mm (por ejemplo, 12:30).';
+        . 'Por fabor, escríbela con el formato hh:mm ';
 } elseif (!esHoraValidaJPB($fin)) {
     $errores[] = "La hora de salida \"$fin\" no tiene un formato válido. "
         . 'Debe escribirse con el formato hh:mm ' . 'Por ejemplo: 12:30.';
@@ -116,7 +115,7 @@ if (esHoraValidaJPB($inicio) && esHoraValidaJPB($fin) && $fin > $inicio) {
     }
 }
 
-// Solape
+// Solapes
 if (
     esFechaValidaJPB($fecha) && esHoraValidaJPB($inicio)
     && esHoraValidaJPB($fin) && $fin > $inicio
@@ -142,19 +141,20 @@ if (
     }
 }
 
-// guardado si pasa todo 
+// guarda si pasa todo ( paso 4 ejercicio 3)
 if (empty($errores)) {
-    $visitas[] = [
+
+    $nuevaVisita = [
         'residente'     => $residente,
-        'vinculo'       => $vinculo,
         'solicitante'   => $solicitante,
+        'vinculo'       => $vinculo,
         'fecha'         => $fecha,
         'inicio'        => $inicio,
         'fin'           => $fin,
         'observaciones' => $observaciones,
     ];
 
-    $escrito = guardarVisitasJPB($archivo, $residentes, $visitas);
+    $escrito = guardarVisitaCSV($archivo, $nuevaVisita);
 
     $estado = $escrito ? 'ok' : 'ko';
 }
@@ -180,10 +180,10 @@ if (empty($errores)) {
             <?php echo htmlspecialchars($inicio) ?> a
             <?php echo htmlspecialchars($fin) ?>.
         </p>
-    <?php elseif ($estado === 'fallo'): ?>
+    <?php elseif ($estado === 'ko'): ?>
         <p id="resultado">
             Los datos son correctos, pero <strong>no ha sido posible guardar la visita</strong>
-            en el archivo. Por fabor, inténtalo de nuevo o avisa al administrador de sistemas Juan Pedro.
+            en el archivo. Por fabor, inténtalo de nuevo o avisa al administrador de sistemas ,Juan Pedro Buger.
         </p>
     <?php else: ?>
         <p id="resultado">No se ha podido concertar la visita.</p>
