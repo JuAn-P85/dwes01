@@ -1,7 +1,13 @@
 <?php
+ini_set('display_errors', '1');
+error_reporting(E_ALL);
+?>
+
+
+<?php
 require_once __DIR__ . '/../funciones/visitas.php';
 require_once __DIR__ . '/../funciones/otrasfunciones.php';
-require_once __DIR__ . '/../funciones/_guardardatos.php';  // necesario para el elseif del formulario correcto
+require_once __DIR__ . '/../funciones/_guardardatos.php'; // nesesario para elelseif sin errores
 
 $conf = require __DIR__ . '/../conf/horario.php';
 
@@ -22,7 +28,18 @@ $fin           = trim($_POST['fin'] ?? '');
 $observaciones = trim($_POST['observaciones'] ?? '');
 
 $errores = [];
-$estado = 'errores'; // 'errores' | 'ok' | 'ko'
+$estado  = 'errores'; // 'errores' | 'ok' | 'ko'
+
+// valores que se conservan en el formulario (vacío = dato erróneo)
+$valores = [
+    'residente'     => '',
+    'vinculo'       => '',
+    'solicitante'   => '',
+    'fecha'         => '',
+    'inicio'        => '',
+    'fin'           => '',
+    'observaciones' => $observaciones,
+];
 
 // referente a residentes
 if (empty($residente)) {
@@ -31,6 +48,8 @@ if (empty($residente)) {
 } elseif (!in_array($residente, $residentes)) {
     $errores[] = "El residente \"$residente\" no existe en la lista. "
         . 'Selecciona un nombre válido.';
+} else {
+    $valores['residente'] = $residente;
 }
 
 // vínculo
@@ -42,12 +61,16 @@ if (empty($vinculo)) {
     $errores[] = "El vínculo \"$vinculo\" no es válido. "
         . 'Las opciones permitidas son: ' . implode(', ', VINCULOS)
         . '. Selecciona una de ellas.';
+} else {
+    $valores['vinculo'] = $vinculo;
 }
 
 // Solicitante
 if (empty($solicitante)) {
     $errores[] = 'No se ha indicado el nombre de la persona que solicita la visita. '
         . 'Por fabor, escribe el nombre completo del solicitante.';
+} else {
+    $valores['solicitante'] = $solicitante;
 }
 
 //Fecha
@@ -63,15 +86,22 @@ if (empty($fecha)) {
         $errores[] = "La fecha \"$fecha\" no existe en el calendario. "
             . "El mes $m no tiene día $d en el año $a. " . 'Por fabor comprueba los datos intocucidos inténtalo de nuevo.';
     }
+} else {
+    $valores['fecha'] = $fecha;
 }
 
-// horarios
+// Horarios
+$inicioValido = false;
+$finValido    = false;
+
 if (empty($inicio)) {
     $errores[] = 'No se ha indicado la hora de inicio de visita. '
         . 'Por fabor, escríbela con el formato hh:mm.';
 } elseif (!esHoraValidaJPB($inicio)) {
     $errores[] = "La hora de entrada \"$inicio\" no tiene un formato válido. "
         . 'Debe escribirse con el formato hh:mm ' . 'Por ejemplo: 11:30.';
+} else {
+    $inicioValido = true;
 }
 
 
@@ -81,39 +111,49 @@ if (empty($fin)) {
 } elseif (!esHoraValidaJPB($fin)) {
     $errores[] = "La hora de salida \"$fin\" no tiene un formato válido. "
         . 'Debe escribirse con el formato hh:mm ' . 'Por ejemplo: 12:30.';
+} else {
+    $finValido = true;
 }
 
 
-if (esHoraValidaJPB($inicio) && esHoraValidaJPB($fin) && $fin <= $inicio) {
+if ($inicioValido && $finValido && $fin <= $inicio) {
     $errores[] = "La hora de salida \"$fin\" tiene que ser  posterior a \"$inicio\". "
         . 'Por fabor ,indica una hora de salida por una posterior a ' . $inicio . '.';
+    $inicioValido = false;
+    $finValido    = false;
 }
 
-// Duración 
-if (esHoraValidaJPB($inicio) && esHoraValidaJPB($fin) && $fin > $inicio) {
-    if (!esDuracionValidaJPB($conf, $inicio, $fin)) {
-        [$hi, $mi] = explode(':', $inicio);
-        [$hf, $mf] = explode(':', $fin);
-        $duracion = ((int)$hf * 60 + (int)$mf) - ((int)$hi * 60 + (int)$mi);
+// Duración mínima
+if ($inicioValido && $finValido && !esDuracionValidaJPB($conf, $inicio, $fin)) {
+    $duracion = duracionEnMinutosJPB($inicio, $fin);
 
-        $errores[] = "La visita de $inicio a $fin dura $duracion minutos, "
-            . "pero la politica establece una duración mínima de $duracion_minima minutos. "
-            . 'Por fabor amplía la franja de salida para alcanzar al menos ' . $duracion_minima . ' minutos.';
-    }
+    $errores[] = "La visita de $inicio a $fin dura $duracion minutos, "
+        . "pero la politica establece una duración mínima de $duracion_minima minutos. "
+        . 'Por fabor amplía la franja de salida para alcanzar al menos ' . $duracion_minima . ' minutos.';
+    $inicioValido = false;
+    $finValido    = false;
 }
 
 // franja horaria
-if (esHoraValidaJPB($inicio) && esHoraValidaJPB($fin) && $fin > $inicio) {
-    if (!estaEnUnaFranjaJPB($conf, $inicio, $fin)) {
-        $textoTramos = array_map(
-            fn($f) => "de {$f[0]} a {$f[1]}",
-            $tramos
-        );
+if ($inicioValido && $finValido && !estaEnUnaFranjaJPB($conf, $inicio, $fin)) {
+    $textoTramos = array_map(
+        fn($f) => "de {$f[0]} a {$f[1]}",
+        $tramos
+    );
 
-        $errores[] = "La visita de $inicio a $fin no se encuentra dentro de una franja horaria. "
-            . 'Se puede visitar ' . implode(' y ', $textoTramos) . ', '
-            . 'Por fabor elige una hora de entrada y salida que estén dentro de una misma franja.';
-    }
+    $errores[] = "La visita de $inicio a $fin no se encuentra dentro de una franja horaria. "
+        . 'Se puede visitar ' . implode(' y ', $textoTramos) . ', '
+        . 'Por fabor elige una hora de entrada y salida que estén dentro de una misma franja.';
+    $inicioValido = false;
+    $finValido    = false;
+}
+
+// las horas que siguen válidas se conservan
+if ($inicioValido) {
+    $valores['inicio'] = $inicio;
+}
+if ($finValido) {
+    $valores['fin']    = $fin;
 }
 
 // Solapes
@@ -159,6 +199,12 @@ if (empty($errores)) {
 
     $estado = $escrito ? 'ok' : 'ko';
 }
+
+// paso 5: si hay errores, se incorpora index.php (con el formulario) y se aborta
+if ($estado === 'errores') {
+    require __DIR__ . '/index.php';
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -181,18 +227,33 @@ if (empty($errores)) {
             <?php echo htmlspecialchars($inicio) ?> a
             <?php echo htmlspecialchars($fin) ?>.
         </p>
-    <?php elseif ($estado === 'ko'): ?>
+
+        <h2>Histórico de visitas de <?php echo htmlspecialchars($residente) ?></h2>
+        <p>
+            <?php echo htmlspecialchars($residente) ?>:
+            <?php echo tiempoDesdeUltimaVisitaJPB($visitas, $residente) ?>.
+        </p>
+
+        <?php $historial = historialVisitasResidenteJPB($visitas, $residente); ?>
+        <?php if (empty($historial)): ?>
+            <p>Este residente no tiene visitas registradas.</p>
+        <?php else: ?>
+            <ul id="historico">
+                <?php foreach ($historial as $v): ?>
+                    <li>
+                        <?php echo htmlspecialchars($v['fecha']) ?>
+                        de <?php echo htmlspecialchars($v['inicio']) ?>
+                        a <?php echo htmlspecialchars($v['fin']) ?>
+                        (<?php echo htmlspecialchars($v['vinculo']) ?>)
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    <?php else: ?>
         <p id="resultado">
             Los datos son correctos, pero <strong>no ha sido posible guardar la visita</strong>
             en el archivo. Por fabor, inténtalo de nuevo o avisa al administrador de sistemas ,Juan Pedro Buger.
         </p>
-    <?php else: ?>
-        <p id="resultado">No se ha podido concertar la visita.</p>
-        <ul id="errores">
-            <?php foreach ($errores as $error): ?>
-                <li><?php echo htmlspecialchars($error) ?></li>
-            <?php endforeach; ?>
-        </ul>
     <?php endif; ?>
 
     <a href="index.php">Solicitar otra visita</a> |

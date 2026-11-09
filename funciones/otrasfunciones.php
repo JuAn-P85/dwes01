@@ -51,12 +51,12 @@ function tiempoDesdeUltimaVisitaJPB(array $visitas, string $residente): string
     $dias        = $fechaUltima->diff($hoy)->days;
 
     if ($dias === 0) {
-        return 'recibió visita hoy mismo';
+        return 'recibió la ultima visita hoy ';
     }
 
     return $dias === 1
-        ? 'hace 1 día'
-        : "hace $dias días";
+        ? 'recibió la ultima visita hace 1 día'
+        : "recibió la ultima visita hace  $dias días";
 }
 
 // retorna el histórico de visitas del residente indicado

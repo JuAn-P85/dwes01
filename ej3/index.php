@@ -53,6 +53,11 @@ $valores = $valores ?? [];
                     Residente de pruebas (no existente)
                 </option>
             </select>
+            <!--donde llamo a la funcion que muestra la ultima visita-->
+            <?php if (!empty($valores['residente']) && in_array($valores['residente'], $residentes)): ?>                
+                    <?php echo htmlspecialchars($valores['residente']) ?>:
+                    <?php echo tiempoDesdeUltimaVisitaJPB($visitas, $valores['residente']) ?>.                
+            <?php endif; ?>
         </p>
 
         <p>

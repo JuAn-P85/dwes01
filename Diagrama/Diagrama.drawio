@@ -1,0 +1,121 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="7l8jEuLYSsmYPnTQ6Ou5">
+    <mxGraphModel dx="2194" dy="733" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="navegador" parent="1" style="swimlane;horizontal=0;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="NAVEGADOR (cliente)" vertex="1">
+          <mxGeometry height="240" width="1080" x="-170" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="n1" parent="navegador" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;" value="index.php&#xa;Formulario HTML&#xa;(7 campos)" vertex="1">
+          <mxGeometry height="80" width="160" x="60" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="n2" parent="navegador" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;" value="Usuario pulsa&#xa;&quot;Registrar la visita&quot;&#xa;→ método POST" vertex="1">
+          <mxGeometry height="80" width="180" x="280" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="n3" parent="navegador" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="PETICIÓN HTTP POST&#xa;a guardar.php&#xa;(7 campos en el body)" vertex="1">
+          <mxGeometry height="80" width="200" x="500" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="navegador" source="n1" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="n2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="navegador" source="n2" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="n3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="servidor" parent="1" style="swimlane;horizontal=0;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;" value="SERVIDOR (PHP)" vertex="1">
+          <mxGeometry height="690" width="1080" x="-200" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" parent="servidor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;" value="guardar.php&#xa;recibe $_POST&#xa;(7 variables)" vertex="1">
+          <mxGeometry height="70" width="160" x="40" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" parent="servidor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;" value="cargarVisitasJPB()&#xa;→ funciones/visitas.php&#xa;[$ok,$ko,$visitas]" vertex="1">
+          <mxGeometry height="70" width="200" x="240" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" parent="servidor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;" value="conf/horario.php&#xa;$tramos, $duracion_minima" vertex="1">
+          <mxGeometry height="70" width="200" x="740" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="val" parent="servidor" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="VALIDACIÓN (guardar.php)&#xa;acumula $errores y $valores" vertex="1">
+          <mxGeometry height="90" width="220" x="320" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="valfn" parent="servidor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;" value="esFechaValidaJPB / esHoraValidaJPB /&#xa;esDuracionValidaJPB / estaEnUnaFranjaJPB /&#xa;solapaConVisitasJPB&#xa;→ funciones/validaciones.php" vertex="1">
+          <mxGeometry height="90" width="320" x="600" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="dec" parent="servidor" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="¿$errores&#xa;vacío?" vertex="1">
+          <mxGeometry height="90" width="140" x="360" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="ok" parent="servidor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;" value="guardarVisitaCSV()&#xa;→ funciones/_guardardatos.php&#xa;escribe línea en visitas.csv" vertex="1">
+          <mxGeometry height="80" width="200" x="120" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="err" parent="servidor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="require index.php; exit;&#xa;re-muestra formulario con&#xa;id=&quot;errores&quot; + $valores&#xa;(campos erróneos vacíos)" vertex="1">
+          <mxGeometry height="90" width="280" x="730" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="servidor" source="s1" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="servidor" source="s4" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="val">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="servidor" source="val" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="valfn">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="servidor" source="val" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="dec">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="servidor" source="dec" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="ok" value="sí (sin errores)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="servidor" source="dec" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="err" value="no (hay errores)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="okres" parent="servidor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="$estado=&#39;ok&#39;&#xa;historialVisitasResidenteJPB() +&#xa;tiempoDesdeUltimaVisitaJPB()&#xa;→ funciones/otrasfunciones.php&#xa;→ muestra id=&quot;resultado&quot;" vertex="1">
+          <mxGeometry height="90" width="280" x="80" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="servidor" source="ok" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="okres">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" parent="servidor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;" value="obtencionResidentes()&#xa;→ funciones/otrasfunciones.php&#xa;$residentes" vertex="1">
+          <mxGeometry height="70" width="200" x="530" y="-10" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="servidor" source="s2" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="servidor" source="s3" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="n3" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="s1" value="POST">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="450" y="260" />
+              <mxPoint x="-30" y="260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e14" edge="1" parent="1" source="err" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="n4" value="HTML respuesta">
+          <mxGeometry relative="1" x="0.1845" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1020" y="520" />
+              <mxPoint x="1020" y="520" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n4" parent="1" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="RESPUESTA HTTP&#xa;HTML recibido" vertex="1">
+          <mxGeometry height="80" width="160" x="940" y="415" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="okres" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="n4" value="HTML respuesta">
+          <mxGeometry relative="1" x="0.3086" as="geometry">
+            <Array as="points">
+              <mxPoint x="133.1" y="919.1" />
+              <mxPoint x="330" y="919.1" />
+              <mxPoint x="330" y="800" />
+              <mxPoint x="1100" y="800" />
+              <mxPoint x="1100" y="455" />
+            </Array>
+            <mxPoint x="120" y="920" as="sourcePoint" />
+            <mxPoint x="1200" y="455" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
