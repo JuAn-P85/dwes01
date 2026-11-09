@@ -65,7 +65,7 @@ function estaEnUnaFranjaJPB(array $conf, string $hora_inicio, string $hora_fin):
     return false;
 }
 
-function solapaConVisitasJPB(array $visitas, string $fecha, string $hora_inicio, string $hora_fin): bool 
+function solapaConVisitasJPB(array $visitas, string $fecha, string $hora_inicio, string $hora_fin): bool
 {
     foreach ($visitas as $visita) {
 

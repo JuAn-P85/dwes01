@@ -7,8 +7,8 @@ $archivo = __DIR__ . '/../datos/visitas.csv';
 
 $residentes = obtencionResidentes($visitas); //otras funciones
 
-// cuando index incluye guardar.php llegan con errores y valores
-// si accedemos directamente, se inicializan vacíos
+// cuando index.php lo incluye guardar.php, llegan con errores y valores;
+// cuando se accede directo, se inicializan vacíos
 $errores = $errores ?? [];
 $valores = $valores ?? [];
 ?>
@@ -53,11 +53,6 @@ $valores = $valores ?? [];
                     Residente de pruebas (no existente)
                 </option>
             </select>
-            <!--donde llamo a la funcion que muestra la ultima visita-->
-            <?php if (!empty($valores['residente']) && in_array($valores['residente'], $residentes)): ?>                
-                    <?php echo htmlspecialchars($valores['residente']) ?>:
-                    <?php echo tiempoDesdeUltimaVisitaJPB($visitas, $valores['residente']) ?>.                
-            <?php endif; ?>
         </p>
 
         <p>

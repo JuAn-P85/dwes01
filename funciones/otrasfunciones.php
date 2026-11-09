@@ -12,7 +12,7 @@ function obtencionResidentes(array $visitas): array
 
 //Funciones propias
 
-// calcula la duración en minutos entre dos horas del mismo día.
+// calcula la duración  entre dos horas del mismo día.
 
 function duracionEnMinutosJPB(string $inicio, string $fin): int
 {
