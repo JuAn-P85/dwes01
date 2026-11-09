@@ -26,6 +26,11 @@
                 <button type="button">Ver imagen capturada del diagrama</button>
             </a>
         </li>
+        <br>
+        <li>
+            <a href="https://github.com/JuAn-P85/dwes01" target="_blank" rel="noopener">Repositorio completo de la tarea en GitHub</a>
+        </li>
+
     </ul>
 
     <hr>
